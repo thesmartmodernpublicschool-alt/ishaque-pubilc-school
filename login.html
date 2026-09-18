@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Login | Alshafique Public School</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="login-page">
+<div class="login-card">
+<div style="text-align:center;margin-bottom:1.5rem">
+<div class="logo-icon" style="margin:0 auto 0.75rem">A</div>
+<h2>Portal Login</h2>
+<p style="color:var(--text-muted);font-size:0.9rem">Alshafique Public School, Kamber</p>
+</div>
+<div class="login-tabs">
+<button class="login-tab active" data-role="student">Student</button>
+<button class="login-tab" data-role="parent">Parent</button>
+<button class="login-tab" data-role="teacher">Teacher</button>
+<button class="login-tab" data-role="admin">Admin</button>
+</div>
+<form id="loginForm">
+<div class="form-group"><label>Username</label><input type="text" class="form-control" id="username" required placeholder="Enter username"></div>
+<div class="form-group"><label>Password</label><input type="password" class="form-control" id="password" required placeholder="Enter password"></div>
+<div id="loginError" style="display:none;padding:0.75rem;border-radius:0.5rem;margin-bottom:1rem;background:rgba(239,68,68,0.12);color:#dc2626;font-size:0.9rem"></div>
+<button type="submit" class="btn btn-primary" style="width:100%">Sign In</button>
+</form>
+<div style="margin-top:1.5rem;padding:1rem;background:var(--bg);border-radius:0.75rem;font-size:0.8rem;color:var(--text-muted)">
+<strong>Demo Credentials:</strong><br>Student: student / student123<br>Parent: parent / parent123<br>Teacher: teacher / teacher123<br>Admin: admin / admin123
+</div>
+<p style="text-align:center;margin-top:1.25rem"><a href="index.html" style="color:var(--primary)">← Back to Home</a></p>
+</div>
+</div>
+<script src="js/main.js"></script>
+<script>
+let selectedRole = 'student';
+document.querySelectorAll('.login-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    selectedRole = tab.dataset.role;
+  });
+});
+document.getElementById('loginForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const result = SchoolApp.login(username, password, selectedRole);
+  if (result.success) {
+    if (selectedRole === 'admin') location.href = 'admin/dashboard.html';
+    else if (selectedRole === 'teacher') location.href = 'teacher/dashboard.html';
+    else if (selectedRole === 'student') location.href = 'student/dashboard.html';
+    else location.href = 'parent/dashboard.html';
+  } else {
+    const err = document.getElementById('loginError');
+    err.textContent = result.message || 'Invalid credentials';
+    err.style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
